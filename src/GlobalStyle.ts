@@ -7,6 +7,9 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: 'Play';
+
+    padding: 0 ${theme.spacing(2)} ${theme.spacing(2)};
+
     background: ${theme.palette.background.body};
     color: ${theme.palette.text.primary};
     ${theme.typography.body};
