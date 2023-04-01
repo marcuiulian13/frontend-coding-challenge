@@ -4,7 +4,8 @@ import rootReducer, { RootState } from '../reducers';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
-export const useAppDispatch = () =>
-  store.dispatch as ThunkDispatch<RootState, void, Action>;
+export type AppDispatch = ThunkDispatch<RootState, void, Action>;
+
+export const useAppDispatch = () => store.dispatch as AppDispatch;
 
 export default store;

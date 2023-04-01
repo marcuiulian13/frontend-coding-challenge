@@ -1,22 +1,34 @@
-import { TournamentsAction } from '../actions/tournaments';
+import { TournamentsAction } from '../actions/tournaments/types';
+import DataLoadingState from '../constants/dataLoadingState';
 import { ITournament } from '../types/tournament';
 
-export enum LoadingState {
-  LOADING = 'LOADING',
-  SUCCESS = 'SUCCESS',
-  ERROR = 'ERROR',
+export interface ITournamentsStateBase {
+  search: string;
+  state: DataLoadingState;
 }
 
-export interface ITournamentsState {
-  state: LoadingState;
-  data: ITournament[];
-  error: unknown;
+export interface ITournamentsLoadingState extends ITournamentsStateBase {
+  state: DataLoadingState.LOADING;
 }
+
+export interface ITournamentsErrorState extends ITournamentsStateBase {
+  state: DataLoadingState.ERROR;
+  error: string;
+}
+
+export interface ITournamentsSuccessState extends ITournamentsStateBase {
+  state: DataLoadingState.SUCCESS;
+  data: ITournament[];
+}
+
+export type ITournamentsState =
+  | ITournamentsLoadingState
+  | ITournamentsErrorState
+  | ITournamentsSuccessState;
 
 const initialState: ITournamentsState = {
-  state: LoadingState.LOADING,
-  data: [],
-  error: null,
+  state: DataLoadingState.LOADING,
+  search: '',
 };
 
 export default function tournaments(
@@ -25,19 +37,60 @@ export default function tournaments(
 ): ITournamentsState {
   switch (action.type) {
     case 'TOURNAMENTS_LOADING':
-      return { state: LoadingState.LOADING, error: null, data: [] };
+      return {
+        state: DataLoadingState.LOADING,
+        search: state.search,
+      };
     case 'TOURNAMENTS_ERROR':
       return {
-        state: LoadingState.ERROR,
+        state: DataLoadingState.ERROR,
         error: action.payload,
-        data: [],
+        search: state.search,
       };
     case 'TOURNAMENTS_SUCCESS':
       return {
-        state: LoadingState.SUCCESS,
+        state: DataLoadingState.SUCCESS,
         data: action.payload,
-        error: null,
+        search: state.search,
       };
+    case 'TOURNAMENTS_SEARCH':
+      return {
+        ...state,
+        search: action.search,
+      };
+    case 'TOURNAMENTS_DELETE':
+      if (state.state === DataLoadingState.SUCCESS) {
+        return {
+          ...state,
+          data: state.data.filter((tournament) => tournament.id !== action.id),
+        };
+      }
+      return state;
+    case 'TOURNAMENTS_RENAME':
+      if (state.state === DataLoadingState.SUCCESS) {
+        return {
+          ...state,
+          data: state.data.map((tournament) =>
+            tournament.id !== action.id
+              ? tournament
+              : {
+                  ...tournament,
+                  name: action.name,
+                }
+          ),
+        };
+      }
+      return state;
+    case 'TOURNAMENTS_INSERT':
+      if (state.state === DataLoadingState.SUCCESS) {
+        return {
+          ...state,
+          data: action.last
+            ? [...state.data, action.tournament]
+            : [action.tournament, ...state.data],
+        };
+      }
+      return state;
     default:
       return state;
   }
