@@ -1,32 +1,56 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../Header';
 import Input from '../Input';
 import Button from '../Button';
 import useTournaments from '../../hooks/useTournaments';
-import useEffectOnce from '../../hooks/useEffectOnce';
-import TournamentList from './TournamentList';
+import TournamentsList from './TournamentList';
+import { motion } from 'framer-motion';
+import {
+  createAnimationVariants,
+  listAnimationVariants,
+  searchAnimationVariants,
+} from './animations';
 
 function Tournaments() {
   const { search, searchTournaments, createTournament } = useTournaments();
 
-  useEffectOnce(() => {
+  useEffect(() => {
     searchTournaments(search);
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
       <Header>
-        <Input
-          type="text"
-          placeholder="Search tournament..."
-          value={search}
-          onChange={(e) => searchTournaments(e.target.value)}
-        />
-        <Button type="button" onClick={createTournament}>
-          Create Tournament
-        </Button>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={searchAnimationVariants}
+        >
+          <Input
+            type="text"
+            placeholder="Search tournament..."
+            value={search}
+            onChange={(e) => searchTournaments(e.target.value)}
+          />
+        </motion.div>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={createAnimationVariants}
+        >
+          <Button type="button" onClick={createTournament}>
+            Create Tournament
+          </Button>
+        </motion.div>
       </Header>
-      <TournamentList />
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={listAnimationVariants}
+      >
+        <TournamentsList />
+      </motion.div>
     </>
   );
 }

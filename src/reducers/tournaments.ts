@@ -38,6 +38,7 @@ export default function tournaments(
   switch (action.type) {
     case 'TOURNAMENTS_LOADING':
       return {
+        ...state,
         state: DataLoadingState.LOADING,
         search: state.search,
       };
@@ -71,12 +72,12 @@ export default function tournaments(
         return {
           ...state,
           data: state.data.map((tournament) =>
-            tournament.id !== action.id
-              ? tournament
-              : {
+            tournament.id === action.id
+              ? {
                   ...tournament,
-                  name: action.name,
+                  ...action.update,
                 }
+              : tournament
           ),
         };
       }

@@ -50,11 +50,14 @@ function tournamentsDelete(id: string): ITournamentsDeleteAction {
   };
 }
 
-function tournamentsRename(id: string, name: string): ITournamentsRenameAction {
+function tournamentsUpdate(
+  id: string,
+  update: Partial<ITournament>
+): ITournamentsRenameAction {
   return {
     type: 'TOURNAMENTS_RENAME',
     id,
-    name,
+    update,
   };
 }
 
@@ -77,13 +80,17 @@ export function fetchTournaments() {
 
     dispatch(tournamentsLoading());
 
-    const res = await fetch(`${API_TOURNAMENTS_URL}?q=${search}`);
+    try {
+      const res = await fetch(`${API_TOURNAMENTS_URL}?q=${search}`);
 
-    if (res.ok) {
-      const tournaments = await res.json();
-      dispatch(tournamentsSuccess(tournaments));
-    } else {
-      dispatch(tournamentsError('Error loading tournaments'));
+      if (res.ok) {
+        const tournaments = await res.json();
+        dispatch(tournamentsSuccess(tournaments));
+      } else {
+        dispatch(tournamentsError('Failed to load tournaments'));
+      }
+    } catch (e) {
+      dispatch(tournamentsError('Failed to load tournaments'));
     }
   };
 }
@@ -112,15 +119,15 @@ export function deleteTournament(id: string) {
   };
 }
 
-export function renameTournament(id: string, name: string) {
+export function updateTournament(id: string, update: Partial<ITournament>) {
   return async (dispatch: AppDispatch) => {
     // Optimistic update
-    dispatch(tournamentsRename(id, name));
+    dispatch(tournamentsUpdate(id, update));
 
     // Launch request
     fetch(`${API_TOURNAMENTS_URL}/${id}`, {
       method: 'PATCH',
-      body: JSON.stringify({ name }),
+      body: JSON.stringify(update),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -140,6 +147,14 @@ export function insertTournament(tournament: ITournament, last?: boolean) {
       headers: {
         'Content-Type': 'application/json',
       },
-    });
+    })
+      .then((res) => res.json())
+      .then((updated: ITournament) => {
+        console.log('now update', tournament.id, updated);
+        dispatch(tournamentsUpdate(tournament.id, updated));
+      })
+      .catch(() => {
+        dispatch(tournamentsDelete(tournament.id));
+      });
   };
 }

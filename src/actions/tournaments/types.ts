@@ -28,7 +28,7 @@ export interface ITournamentsDeleteAction extends Action {
 export interface ITournamentsRenameAction extends Action {
   type: `TOURNAMENTS_RENAME`;
   id: string;
-  name: string;
+  update: Partial<ITournament>;
 }
 
 export interface ITournamentsInsertAction extends Action {

@@ -4,7 +4,7 @@ import { useAppDispatch } from '../store';
 import {
   searchTournaments as searchTournamentsAction,
   deleteTournament as deleteTournamentAction,
-  renameTournament as renameTournamentAction,
+  updateTournament as updateTournamentAction,
   insertTournament as insertTournamentAction,
 } from '../actions/tournaments';
 import { selectTournaments } from '../selectors/tournaments';
@@ -35,7 +35,7 @@ function useTournaments() {
       });
 
       if (newName) {
-        dispatch(renameTournamentAction(id, newName));
+        dispatch(updateTournamentAction(id, { name: newName }));
       }
     },
     [dispatch]
@@ -64,7 +64,7 @@ function useTournaments() {
     if (name) {
       dispatch(
         insertTournamentAction({
-          id: 'new',
+          id: crypto.randomUUID(),
           name,
           game: 'Random',
           organizer: 'Random',
