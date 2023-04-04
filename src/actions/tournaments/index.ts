@@ -150,7 +150,6 @@ export function insertTournament(tournament: ITournament, last?: boolean) {
     })
       .then((res) => res.json())
       .then((updated: ITournament) => {
-        console.log('now update', tournament.id, updated);
         dispatch(tournamentsUpdate(tournament.id, updated));
       })
       .catch(() => {

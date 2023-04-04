@@ -14,6 +14,12 @@ import {
   loadingAnimationVariants,
   noResultsAnimationVariants,
 } from './animations';
+import {
+  TOURNAMENTS_EMPTY_TEXT,
+  TOURNAMENTS_ERROR_CONTAINER,
+  TOURNAMENTS_LIST,
+  TOURNAMENTS_LOADING,
+} from '../../../testIds';
 
 function TournamentsList() {
   const tournaments = useTournaments();
@@ -25,6 +31,7 @@ function TournamentsList() {
         initial="hidden"
         animate="visible"
         variants={loadingAnimationVariants}
+        data-cy={TOURNAMENTS_LOADING}
       >
         Loading tournaments...
       </CenteredText>
@@ -40,6 +47,7 @@ function TournamentsList() {
         initial="hidden"
         animate="visible"
         variants={errorAnimationVariants}
+        data-cy={TOURNAMENTS_ERROR_CONTAINER}
       >
         <CenteredText>Something went wrong: {error}</CenteredText>
         <Button onClick={() => searchTournaments(search)}>Retry</Button>
@@ -55,11 +63,12 @@ function TournamentsList() {
       initial="hidden"
       animate="visible"
       variants={noResultsAnimationVariants}
+      data-cy={TOURNAMENTS_EMPTY_TEXT}
     >
       No tournaments found.
     </CenteredText>
   ) : (
-    <Grid>
+    <Grid data-cy={TOURNAMENTS_LIST}>
       <AnimatePresence>
         {data.map((tournament, i, arr) => (
           <Card

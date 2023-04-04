@@ -1,3 +1,9 @@
+# Notes
+
+## E2E tests
+
+To run the end-to-end tests, you need to first run `npm run start:e2e`, which will start the app and the fake REST API server on localhost, ports 3000 and 4000. Then, in a separate terminal, run `npm run test:e2e` to run the Cypress tests.
+
 # Frontend Coding Challenge v2.0
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and has addtional libraries included:

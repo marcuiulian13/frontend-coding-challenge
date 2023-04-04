@@ -32,18 +32,28 @@
     "typescript": "~4.7.4",
     "wait-for-localhost-cli": "^3.0.0"
   },
+  "devDependencies": {
+    "cypress": "^12.9.0",
+    "eslint-plugin-cypress": "^2.13.2"
+  },
   "scripts": {
     "start": "concurrently --kill-others \"npm run start:api\"  \"wait-for-localhost 4000 && npm run start:web\"",
     "start:api": "json-server -p 4000 -m api/post.js -d -w ./api/db.js",
+    "start:api:e2e": "json-server --host 0.0.0.0 -p 4000 -m api/post.js -d -w ./api/db.js",
     "start:api:timeout": "json-server -p 4000 -m api/timeout.js -d -w ./api/db.js",
     "start:web": "react-scripts start",
+    "start:e2e": "concurrently --kill-others \"npm run start:api:e2e\"  \"npm run start:web\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:e2e": "cypress run",
     "eject": "react-scripts eject",
     "prepare": "husky install"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "plugin:cypress/recommended"
+    ]
   },
   "browserslist": {
     "production": [

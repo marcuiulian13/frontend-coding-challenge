@@ -6,6 +6,10 @@ import Button from '../../Button';
 import ButtonsContainer from './ButtonsContainer';
 import InfoLine from './InfoLine';
 import useTournaments from '../../../hooks/useTournaments';
+import {
+  TOURNAMENT_DELETE_BUTTON,
+  TOURNAMENT_EDIT_BUTTON,
+} from '../../../testIds';
 
 interface ITournamentProps {
   tournament: ITournament;
@@ -28,8 +32,18 @@ function Tournament({ tournament }: ITournamentProps) {
         Start: {format(new Date(startDate), 'dd/MM/yyyy HH:mm:ss')}
       </InfoLine>
       <ButtonsContainer>
-        <Button onClick={() => renameTournament(id, name)}>Edit</Button>
-        <Button onClick={() => deleteTournament(id)}>Delete</Button>
+        <Button
+          onClick={() => renameTournament(id, name)}
+          data-cy={TOURNAMENT_EDIT_BUTTON}
+        >
+          Edit
+        </Button>
+        <Button
+          onClick={() => deleteTournament(id)}
+          data-cy={TOURNAMENT_DELETE_BUTTON}
+        >
+          Delete
+        </Button>
       </ButtonsContainer>
     </>
   );

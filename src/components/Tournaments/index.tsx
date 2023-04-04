@@ -10,6 +10,7 @@ import {
   listAnimationVariants,
   searchAnimationVariants,
 } from './animations';
+import { TOURNAMENTS_CREATE_BUTTON } from '../../testIds';
 
 function Tournaments() {
   const { search, searchTournaments, createTournament } = useTournaments();
@@ -39,7 +40,11 @@ function Tournaments() {
           animate="visible"
           variants={createAnimationVariants}
         >
-          <Button type="button" onClick={createTournament}>
+          <Button
+            type="button"
+            onClick={createTournament}
+            data-cy={TOURNAMENTS_CREATE_BUTTON}
+          >
             Create Tournament
           </Button>
         </motion.div>
